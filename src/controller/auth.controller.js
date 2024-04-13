@@ -20,7 +20,7 @@ const updateAuthById = asyncHandler(async (req, res) => {
 });
 
 const send_OTP = asyncHandler(async (req, res) => {
-    const otp = await AuthService.send_SMS(req.body.phone)
+    const otp = await AuthService.send_SMS(req.query.number)
     res.status(200).send({ success: true, data: otp });
 })
 

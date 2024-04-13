@@ -64,24 +64,14 @@ const createAccount = async (userBody) => {
     return { user, jwt: { token, expiry: date.toISOString() } };
 };
 
-// router.post('/generateOTP', async (req, res) => {
-//     const { email } = req.body
-//     const user = await User.findOne({ email: email });
-//     if (user) {
-
-//         console.log(req.app.locals.OTP)
-//         res.status(201).send({ code: req.app.locals.OTP, user })
-//     } else {
-//         return res.status(400).send({ error: "Email does not exist" })
-//     }
-// })
-
 const send_SMS = async (phone) => {
-     const  OTP = await otpGenerator.generate(4, {
+    const OTP = await otpGenerator.generate(4, {
         lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false
     })
     const url = `https://trans.smsfresh.co/api/sendmsg.php?user=AstrovedhaS&pass=123456&sender=ASTOVD&phone=${phone}&text=${OTP}%20is%20the%20one%20time%20password%20for%20FortuneTalk%20App%20-%20Astrovedha%20Shastra%20Pvt%20Ltd&priority=ndnd&stype=normal`;
-    await axios.get(url)
+    await axios.get(url).catch((err) => {
+        console.log(err)
+    })
 
     return OTP
 }
