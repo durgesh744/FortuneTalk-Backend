@@ -27,7 +27,7 @@ const send_OTP = asyncHandler(async (req, res) => {
         user = user.user
     }
     const otp = await AuthService.send_SMS(req.query.number)
-    res.status(200).send({ success: true, user, new_user: !user });
+    res.status(200).send({ success: true, otp,  user, new_user: !user });
 })
 
 module.exports = {
