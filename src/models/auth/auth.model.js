@@ -29,21 +29,10 @@ const userSchema = new mongoose.Schema(
             lowercase: true,
             required: [false, "Please provide a email address"],
         },
-        emailVerified: {
-            type: Boolean,
-            default: false,
-        },
-        password: {
-            type: String,
-            require: [false, "Please provide Password"],
-            trim: true,
-            default: "Abcd@1234"
-        },
         phone: {
             type: String,
             require: [true, "Please provide phone Number"],
             trim: true,
-            // unique: true
         },
         dob: {
             type: Date,

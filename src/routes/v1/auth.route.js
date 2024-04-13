@@ -5,7 +5,10 @@ const router = express.Router();
 router
     .route('/')
     .post(AuthController.createAccount)
-    .get(AuthController.send_OTP)
+
+ router
+    .route("/otp")   
+    .post(AuthController.send_OTP)
 
 router
     .route("/update")

@@ -40,8 +40,6 @@ const generateToken = async (user_id) => {
 
 const createAccount = async (userBody) => {
     const data = { ...userBody };
-    if (await Auth.isEmailTaken(data.email))
-        throw new ErrorResponse("Email already taken", 400);
 
     if (await Auth.isphoneTaken(data.phone))
         throw new ErrorResponse("Phone Number already taken", 400);
@@ -61,7 +59,7 @@ const createAccount = async (userBody) => {
     );
     let date = new Date();
     date.setDate(date.getDate() + 6);
-    return { user, jwt: { token, expiry: date.toISOString() } };
+    return { user: user.user, jwt: { token, expiry: date.toISOString() } };
 };
 
 const send_SMS = async (phone) => {
