@@ -20,13 +20,8 @@ const updateAuthById = asyncHandler(async (req, res) => {
 });
 
 const send_OTP = asyncHandler(async (req, res) => {
-    // const {phone, number } = req.body
-    let  phone = 8052941488
-   let  msg = "5650 hi otp"
-    const otp = await AuthService.send_SMS(phone, msg)
+    const otp = await AuthService.send_SMS(req.body.phone)
     res.status(200).send({ success: true, data: otp });
-
-    console.log(otp)
 })
 
 module.exports = {
