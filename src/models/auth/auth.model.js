@@ -28,11 +28,13 @@ const userSchema = new mongoose.Schema(
             unique: true,
             lowercase: true,
             required: [false, "Please provide a email address"],
+            sparse: true,
         },
         phone: {
             type: String,
             require: [true, "Please provide phone Number"],
             trim: true,
+            // unique: true
         },
         dob: {
             type: Date,
@@ -96,15 +98,6 @@ userSchema.statics.getEmails = async function (userIds) {
     return users.map((user) => user.email);
 };
 
-userSchema.methods.isPasswordMatch = async function (password) {
-    return await bcrypt.compare(password, this.password);
-};
-
-userSchema.methods.changePassword = async function (password) {
-    this.password = password;
-    await this.save();
-};
-
 userSchema.pre("save", async function (next) {
     if (
         this.isModified("name") &&
@@ -112,11 +105,6 @@ userSchema.pre("save", async function (next) {
     ) {
         this.profile_image = `https://ui-avatars.com/api/?background=random&size=128&rounded=true&format=png&name=${this.name}`;
     }
-
-    if (!this.isModified("password")) {
-        next();
-    }
-    this.password = await bcrypt.hash(this.password, 10);
 });
 
 const User = mongoose.model("User", userSchema);

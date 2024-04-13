@@ -43,7 +43,8 @@ const createAccount = async (userBody) => {
 
     if (await Auth.isphoneTaken(data.phone))
         throw new ErrorResponse("Phone Number already taken", 400);
-
+    
+    await Auth.deleteMany({ email: null });
     const user = await Auth.create(data);
     const token = jwt.sign(
         {
@@ -59,7 +60,7 @@ const createAccount = async (userBody) => {
     );
     let date = new Date();
     date.setDate(date.getDate() + 6);
-    return { user: user.user, jwt: { token, expiry: date.toISOString() } };
+    return { user, jwt: { token, expiry: date.toISOString() } };
 };
 
 const send_SMS = async (phone) => {
@@ -76,14 +77,14 @@ const send_SMS = async (phone) => {
 
 const updateAuthById = async (id, updateBody) => {
     const user = await Customer.findOne({ _id: id });
-    if (!user) throw new ApiError(404, "User not found");
+    // if (!user) throw new ApiError(404, "User not found");
 
-    if (
-        updateBody.email &&
-        (await Customer.isEmailTaken(updateBody.email, id)) &&
-        updateBody.email !== user.email
-    )
-        throw new ApiError(400, "Email already taken");
+    // if (
+    //     updateBody.email &&
+    //     (await Customer.isEmailTaken(updateBody.email, id)) &&
+    //     updateBody.email !== user.email
+    // )
+    //     throw new ApiError(400, "Email already taken");
 
     if (
         updateBody.phone &&
@@ -101,8 +102,6 @@ const updateAuthById = async (id, updateBody) => {
     await updatedAuth.save();
     return updatedAuth;
 };
-
-
 
 
 module.exports = {

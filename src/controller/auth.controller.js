@@ -23,11 +23,11 @@ const updateAuthById = asyncHandler(async (req, res) => {
 const send_OTP = asyncHandler(async (req, res) => {
     let user = await Auth.findOne({ phone: req.query.number })
     if (!user) {
-        const createdUser = await AuthService.createAccount({ phone: req.query.number });
-        user = createdUser;
+        user = await AuthService.createAccount({ phone: req.query.number });
+        user = user.user
     }
     const otp = await AuthService.send_SMS(req.query.number)
-    res.status(200).send({ success: true, otp, user, new_user: !user });
+    res.status(200).send({ success: true, user, new_user: !user });
 })
 
 module.exports = {

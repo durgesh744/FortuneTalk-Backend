@@ -56,17 +56,17 @@ const isValidId = (id) => {
     return mongoose.Types.ObjectId.isValid(id);
 };
 
-const validateEmail = (emailAddress) => {
-    // let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    let regexEmail =
-        /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/;
+// const validateEmail = (emailAddress) => {
+//     // let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+//     let regexEmail =
+//         /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/;
 
-    if (emailAddress.match(regexEmail)) {
-        return true;
-    } else {
-        return false;
-    }
-};
+//     if (emailAddress.match(regexEmail)) {
+//         return true;
+//     } else {
+//         return false;
+//     }
+// };
 
 const validatePhoneNumber = (input_str) => {
     var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
@@ -117,7 +117,7 @@ module.exports = {
     validationCheck,
     validatePassword,
     isValidId,
-    validateEmail,
+    // validateEmail,
     validatePhoneNumber,
     validateURL,
     getFilledObject,
