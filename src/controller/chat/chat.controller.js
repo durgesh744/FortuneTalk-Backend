@@ -1,5 +1,5 @@
-const asyncHandler = require("../middleware/asyncHandler");
-const { Auth , Chat} = require("../models");
+const asyncHandler = require("../../middleware/asyncHandler");
+const { Auth , Chat} = require("../../models");
 
 //@description     Create or fetch One to One Chat
 //@route           POST /api/chat/
@@ -57,7 +57,6 @@ const fetchChats = asyncHandler(async (req, res) => {
   try {
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
       .populate("users", "-password")
-      .populate("groupAdmin", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 })
       .then(async (results) => {

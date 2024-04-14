@@ -1,5 +1,5 @@
-const asyncHandler = require("../middleware/asyncHandler");
-const { Auth , Chat, Message} = require("../models");
+const asyncHandler = require("../../middleware/asyncHandler");
+const { Auth , Chat, Message} = require("../../models");
 
 //@description     Get all Messages
 //@route           GET /api/Message/:chatId
