@@ -60,7 +60,6 @@ const send_OTP = asyncHandler(async (req, res) => {
  */
 
 const getUser = asyncHandler(async (req, res) => {
-    console.log(req.query.id, "lkndskjnf")
     res.status(200).send({ success: true, user: await Auth.findOne({ _id: req.query.id }) })
 })
 
@@ -72,7 +71,6 @@ const getUser = asyncHandler(async (req, res) => {
  */
 
 const UpdateUser = asyncHandler(async (req, res) => {
-    console.log(req.params.id)
     const updateUser = await AuthService.updateAuthById(req.params.id, req.body);
     res.status(200).json({ success: true, data: updateUser });
 });

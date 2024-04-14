@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../utils/ErrorResponse");
 const { Auth } = require("../models");
 
-const verifyCallback = (req, res, next, permission = "") => async (err, response) => {
+const verifyCallback = (req, res, next) => async (err, response) => {
     try {
         if (err)
             throw new ErrorResponse(
@@ -11,14 +11,14 @@ const verifyCallback = (req, res, next, permission = "") => async (err, response
             );
 
         req.user = response;
-        const user = await Auth.findById(req.user.user_id);
+        const user = await Auth.findById(req.user.userId);
         if (!user) {
             throw new ErrorResponse(
                 `User not found`,
                 400
             );
         }
-        req.user_detail = user;
+        req.user = user;
         next();
     } catch (err) {
         res.status(err.statusCode).json({
@@ -37,7 +37,6 @@ const auth = (permission) => (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 
-
     if (token == null) {
         throw new ErrorResponse(
             `unauthorized, please provide a valid jwt token`,
@@ -48,7 +47,7 @@ const auth = (permission) => (req, res, next) => {
     jwt.verify(
         token,
         process.env.JWT_SECRET,
-        verifyCallback(req, res, next, permission)
+        verifyCallback(req, res, next)
     );
 };
 
