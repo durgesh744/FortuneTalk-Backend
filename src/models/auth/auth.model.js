@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 const { toJSON } = require("../../plugin/model.plugin.index");
 
 const userSchema = new mongoose.Schema(
@@ -25,16 +24,15 @@ const userSchema = new mongoose.Schema(
                 /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                 "Please provide a valid email address",
             ],
-            unique: true,
-            lowercase: true,
+            unique: false,
+            lowercase: false,
             required: [false, "Please provide a email address"],
             sparse: true,
         },
         phone: {
             type: String,
             require: [true, "Please provide phone Number"],
-            trim: true,
-            // unique: true
+            trim: false,
         },
         dob: {
             type: Date,
@@ -60,6 +58,10 @@ const userSchema = new mongoose.Schema(
             require: false
         },
         problem: {
+            type: String,
+            require: false
+        },
+        fb_id: {
             type: String,
             require: false
         },

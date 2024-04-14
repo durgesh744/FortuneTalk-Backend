@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-
-const JWT_SECRET = process.env.JWT_SECRET;
 const { Auth } = require("../models");
 const ErrorResponse = require("../utils/ErrorResponse");
 const { default: axios } = require("axios");
 const otpGenerator = require("otp-generator")
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const generateToken = async (user_id) => {
     const user = await Auth.findOne({ _id: user_id });
@@ -33,7 +33,7 @@ const generateToken = async (user_id) => {
 };
 
 /**
- * Sign up as new user
+ * create account as new user
  * @param {Object} userBody express request body
  * @returns {Promise<Auth>}
  */
@@ -41,14 +41,10 @@ const generateToken = async (user_id) => {
 const createAccount = async (userBody) => {
     const data = { ...userBody };
 
-    if (await Auth.isphoneTaken(data.phone))
-        throw new ErrorResponse("Phone Number already taken", 400);
-    
-    await Auth.deleteMany({ email: null });
     const user = await Auth.create(data);
     const token = jwt.sign(
         {
-            name: user.fname,
+            fb_id: user.fb_id,
             email: user.email,
             phone: user.phone,
             userId: user._id,
@@ -63,6 +59,12 @@ const createAccount = async (userBody) => {
     return { user, jwt: { token, expiry: date.toISOString() } };
 };
 
+/**
+ * Generate OTP as new user or existing
+ * @param {string} phone express request body
+ * @returns {Promise<Auth>}
+ */
+
 const send_SMS = async (phone) => {
     const OTP = await otpGenerator.generate(4, {
         lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false
@@ -75,29 +77,21 @@ const send_SMS = async (phone) => {
     return OTP
 }
 
+/**
+ * Update as existing user
+ * @param {Object} updateBody express request body
+ * @returns {Promise<Auth>}
+ */
+
 const updateAuthById = async (id, updateBody) => {
-    const user = await Customer.findOne({ _id: id });
-    // if (!user) throw new ApiError(404, "User not found");
-
-    // if (
-    //     updateBody.email &&
-    //     (await Customer.isEmailTaken(updateBody.email, id)) &&
-    //     updateBody.email !== user.email
-    // )
-    //     throw new ApiError(400, "Email already taken");
-
-    if (
-        updateBody.phone &&
-        (await Customer.isphoneTaken(updateBody.phone, id)) &&
-        updateBody.phone !== user.phone
-    )
-        throw new ApiError(400, "Telephone already taken");
+    const user = await Auth.findOne({ _id: id });
+    if (!user) throw new ApiError(404, "User not found");
 
     const updatedAuth = await Auth.findOneAndUpdate(
         { _id: id },
         { $set: { ...updateBody } },
         { new: true }
-    ).select("-password");
+    );
 
     await updatedAuth.save();
     return updatedAuth;

@@ -2,17 +2,25 @@ const express = require('express');
 const { AuthController } = require('../../controller');
 const router = express.Router();
 
-// router
-//     .route('/')
-//     .post(AuthController.createAccount)
+router
+    .route('/:id')
+    .put(AuthController.UpdateUser)
 
- router
-    .route("/otp")   
+router
+    .route("/")
+    .get(AuthController.getUser)
+
+router
+    .route('/login_with_google')
+    .post(AuthController.LoginWithGoogle)
+
+router
+    .route("/otp")
     .post(AuthController.send_OTP)
 
-// router
-//     .route("/update")
-//     .put(AuthController.updateAuthById)
+router
+    .route("/login_with_facebook")
+    .post(AuthController.LoginWithFacebook)
 
 
 module.exports = router;

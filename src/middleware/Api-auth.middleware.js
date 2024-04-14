@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
-// const Customer = require("../models/userModel");
-const { Customer } = require("../models");
 const ErrorResponse = require("../utils/ErrorResponse");
+const { Auth } = require("../models");
 
 const verifyCallback = (req, res, next, permission = "") => async (err, response) => {
     try {
@@ -12,10 +11,10 @@ const verifyCallback = (req, res, next, permission = "") => async (err, response
             );
 
         req.user = response;
-        const user = await Customer.findById(req.user.user_id);
+        const user = await Auth.findById(req.user.user_id);
         if (!user) {
             throw new ErrorResponse(
-                `Customer not found`,
+                `User not found`,
                 400
             );
         }

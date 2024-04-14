@@ -1,6 +1,7 @@
 const asyncHandler = require("../middleware/asyncHandler");
 const { Auth } = require("../models");
 const { AuthService } = require("../service");
+const ApiError = require("../utils/ApiError");
 
 /**
  * This function is used to createAccount a user
@@ -9,29 +10,49 @@ const { AuthService } = require("../service");
  * @returns {Object} Returns created user object
  */
 
-const createAccount = asyncHandler(async (req, res) => {
-    const user = await AuthService.createAccount(req.body);
-    return res.status(201).json({ success: true, data: user });
+const LoginWithGoogle = asyncHandler(async (req, res) => {
+    let user = await Auth.findOne({ email: req.body.email })
+    if (!user) {
+        const newUser = await AuthService.createAccount(req.body);
+        user = newUser.user
+    }
+    res.status(201).json({ success: true, data: user });
 })
 
-const updateAuthById = asyncHandler(async (req, res) => {
-    let user = req.user_detail;
-    const profile = await AuthService.updateAuthById(user.id, req.body);
-    res.status(200).send({ success: true, data: profile });
+const LoginWithFacebook = asyncHandler(async (req, res) => {
+    let user = await Auth.findOne({ fb_id: req.body.fb_id })
+    if (user) {
+        const newUser = await AuthService.createAccount({ fb_id: req.body.fb_id, fname: req.body.username });
+        user = newUser.user
+    }
+    res.status(201).json({ success: true, data: user });
 });
 
 const send_OTP = asyncHandler(async (req, res) => {
     let user = await Auth.findOne({ phone: req.query.number })
     if (!user) {
-        user = await AuthService.createAccount({ phone: req.query.number });
-        user = user.user
+        const newUser = await AuthService.createAccount({ phone: req.query.number });
+        user = newUser.user
     }
     const otp = await AuthService.send_SMS(req.query.number)
-    res.status(200).send({ success: true, otp, user});
+    res.status(200).send({ success: true, otp, user });
 })
 
+const getUser = asyncHandler(async (req, res) => {
+    console.log(req.query.id, "lkndskjnf")
+    res.status(200).send({ success: true, user: await Auth.findOne({ _id: req.query.id }) })
+})
+
+const UpdateUser = asyncHandler(async (req, res) => {
+    console.log(req.params.id)
+    const updateUser = await AuthService.updateAuthById(req.params.id, req.body);
+    res.status(200).json({ success: true, data: updateUser });
+});
+
 module.exports = {
-    createAccount,
-    updateAuthById,
-    send_OTP
+    LoginWithGoogle,
+    LoginWithFacebook,
+    send_OTP,
+    getUser,
+    UpdateUser
 };
