@@ -14,22 +14,22 @@ const defaultRoutes = [
   },
 ]
 
-const authRoutes = [
-  {
-    path: "/chat",
-    route: Chat
-  },
-];
+// const authRoutes = [
+//   {
+//     path: "/chat",
+//     route: Chat
+//   },
+// ];
 
 defaultRoutes.forEach((route) => {
   router.use(route.path, route.route);
 });
 
-//Auth routes
-router.use(require("../../middleware/Api-auth.middleware").auth())
+// Auth routes
+// router.use(require("../../middleware/Api-auth.middleware").auth())
 
-authRoutes.forEach((route) => {
-  router.use(route.path, route.route);
-});
+// authRoutes.forEach((route) => {
+//   router.use(route.path, route.route);
+// });
 
 module.exports = router;
