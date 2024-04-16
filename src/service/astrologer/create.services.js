@@ -12,10 +12,10 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const createAccount = async (userBody) => {
     const data = { ...userBody };
 
-    if (await TeamMember.isEmailTaken(data.email))
+    if (await Astrologer.isEmailTaken(data.email))
         throw new ErrorResponse("Email already taken", 400);
 
-    if (await TeamMember.isMobileNumberTaken(data.mobileNumber))
+    if (await Astrologer.isMobileNumberTaken(data.mobileNumber))
         throw new ErrorResponse("Mobile Number already taken", 400);
 
     const user = await Astrologer.create(data);
