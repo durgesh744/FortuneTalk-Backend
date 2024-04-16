@@ -3,12 +3,12 @@ const { toJSON } = require("../../plugin/model.plugin.index");
 
 const userSchema = new mongoose.Schema(
     {
-        fname: {
+        firstname: {
             type: String,
             trim: false,
             require: false,
         },
-        lname: {
+        lastname: {
             type: String,
             trim: false,
             require: false,

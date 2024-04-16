@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-//routes
+//routes`
 const Auth = require("./auth.route")
 const Chat = require("./chat.route")
 

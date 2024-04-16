@@ -1,6 +1,5 @@
 // <--------------------------------------------- Database connect --------------------------------------------------->
 require("./src/database/init");
-require('./socket')
 
 const { app } = require("./app");
 const colors = require('colors');

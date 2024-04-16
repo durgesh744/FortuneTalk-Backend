@@ -7,30 +7,30 @@ const otpGenerator = require("otp-generator")
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const generateToken = async (user_id) => {
-    const user = await Auth.findOne({ _id: user_id });
-    if (!user) throw new ErrorResponse("Auth not found", 404);
+// const generateToken = async (user_id) => {
+//     const user = await Auth.findOne({ _id: user_id });
+//     if (!user) throw new ErrorResponse("Auth not found", 404);
 
-    const date = new Date();
-    if (!user.resetToken.token || user.resetToken.expiry <= date) {
-        const buffer = crypto.randomBytes(32);
-        const token = buffer.toString("hex");
-        const date = new Date();
-        date.setDate(date.getDate() + 1);
-        await Auth.findOneAndUpdate(
-            { _id: user_id },
-            {
-                resetToken: {
-                    token,
-                    expiry: date,
-                },
-            }
-        );
-        return token;
-    }
+//     const date = new Date();
+//     if (!user.resetToken.token || user.resetToken.expiry <= date) {
+//         const buffer = crypto.randomBytes(32);
+//         const token = buffer.toString("hex");
+//         const date = new Date();
+//         date.setDate(date.getDate() + 1);
+//         await Auth.findOneAndUpdate(
+//             { _id: user_id },
+//             {
+//                 resetToken: {
+//                     token,
+//                     expiry: date,
+//                 },
+//             }
+//         );
+//         return token;
+//     }
 
-    return user.resetToken.token;
-};
+//     return user.resetToken.token;
+// };
 
 /**
  * create account as new user
@@ -101,7 +101,7 @@ const updateAuthById = async (id, updateBody) => {
 
 
 module.exports = {
-    generateToken,
+    // generateToken,
     createAccount,
     updateAuthById,
     send_SMS
