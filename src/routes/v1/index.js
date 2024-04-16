@@ -3,7 +3,8 @@ const router = express.Router();
 
 //routes`
 const Auth = require("./auth.route")
-const Chat = require("./chat.route")
+const Chat = require("./chat.route");
+const Astrologer = require("./astrologer/astrologer.route");
 
 const defaultRoutes = [
 
@@ -12,24 +13,28 @@ const defaultRoutes = [
     path: "/auth",
     route: Auth
   },
+  {
+    path: "/astrologer",
+    route: Astrologer
+  },
 ]
 
-// const authRoutes = [
-//   {
-//     path: "/chat",
-//     route: Chat
-//   },
-// ];
+const authRoutes = [
+  {
+    path: "/chat",
+    route: Chat
+  },
+];
 
 defaultRoutes.forEach((route) => {
   router.use(route.path, route.route);
 });
 
 // Auth routes
-// router.use(require("../../middleware/Api-auth.middleware").auth())
+router.use(require("../../middleware/Api-auth.middleware").auth())
 
-// authRoutes.forEach((route) => {
-//   router.use(route.path, route.route);
-// });
+authRoutes.forEach((route) => {
+  router.use(route.path, route.route);
+});
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const { Astrologer } = require("../../models");
 const { CreateAstrologerServices } = require("../../service");
-const asyncHandler = require("../middleware/asyncHandler");
+const asyncHandler = require("../../middleware/asyncHandler");
 
 /**
  * This function is used to createAccount a user
