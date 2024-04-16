@@ -1,36 +1,9 @@
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const { Auth } = require("../models");
-const ErrorResponse = require("../utils/ErrorResponse");
 const { default: axios } = require("axios");
 const otpGenerator = require("otp-generator")
 
 const JWT_SECRET = process.env.JWT_SECRET;
-
-// const generateToken = async (user_id) => {
-//     const user = await Auth.findOne({ _id: user_id });
-//     if (!user) throw new ErrorResponse("Auth not found", 404);
-
-//     const date = new Date();
-//     if (!user.resetToken.token || user.resetToken.expiry <= date) {
-//         const buffer = crypto.randomBytes(32);
-//         const token = buffer.toString("hex");
-//         const date = new Date();
-//         date.setDate(date.getDate() + 1);
-//         await Auth.findOneAndUpdate(
-//             { _id: user_id },
-//             {
-//                 resetToken: {
-//                     token,
-//                     expiry: date,
-//                 },
-//             }
-//         );
-//         return token;
-//     }
-
-//     return user.resetToken.token;
-// };
 
 /**
  * create account as new user

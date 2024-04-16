@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const { Auth } = require("../models");
-const ErrorResponse = require("../utils/ErrorResponse");
-
+const ErrorResponse = require("../../utils/ErrorResponse");
+const { Astrologer } = require("../../models");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 /**
@@ -14,7 +12,13 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const createAccount = async (userBody) => {
     const data = { ...userBody };
 
-    const user = await Auth.create(data);
+    if (await TeamMember.isEmailTaken(data.email))
+        throw new ErrorResponse("Email already taken", 400);
+
+    if (await TeamMember.isMobileNumberTaken(data.mobileNumber))
+        throw new ErrorResponse("Mobile Number already taken", 400);
+
+    const user = await Astrologer.create(data);
     const token = jwt.sign(
         {
             fb_id: user.fb_id,
@@ -38,24 +42,22 @@ const createAccount = async (userBody) => {
  * @returns {Promise<Auth>}
  */
 
-const updateAuthById = async (id, updateBody) => {
-    const user = await Auth.findOne({ _id: id });
-    if (!user) throw new ApiError(404, "User not found");
+const updateAustrologerById = async (id, updateBody) => {
+    const astrologer = await Astrologer.findOne({ _id: id });
+    if (!astrologer) throw new ApiError(404, "User not found");
 
-    const updatedAuth = await Auth.findOneAndUpdate(
+    const updatedAstrologer = await Astrologer.findOneAndUpdate(
         { _id: id },
         { $set: { ...updateBody } },
         { new: true }
     );
 
-    await updatedAuth.save();
-    return updatedAuth;
+    await updatedAstrologer.save();
+    return updatedAstrologer;
 };
 
 
 module.exports = {
-    // generateToken,
     createAccount,
-    updateAuthById,
-    send_SMS
+    updateAustrologerById
 };

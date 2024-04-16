@@ -91,36 +91,33 @@ astrologerSchema.methods.isPasswordMatch = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
 
-
-const Astrologers = mongoose.model('Astrologers', astrologerSchema);
-
-customerSchema.statics.isEmailTaken = async function (email, excludeUserId) {
-    const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
-    return !!user; // return true if user is not null
+astrologerSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+    const astrologer = await this.findOne({ email, _id: { $ne: excludeUserId } });
+    return !!astrologer; // return true if user is not null
 };
 
-customerSchema.statics.isTelephoneTaken = async function (
-    telephone,
+astrologerSchema.statics.isMobileNumberTaken = async function (
+    mobileNumber,
     excludeUserId
 ) {
-    const user = await this.findOne({ telephone, _id: { $ne: excludeUserId } });
-    return !!user; // return true if user is not null
+    const astrologer = await this.findOne({ mobileNumber, _id: { $ne: excludeUserId } });
+    return !!astrologer; // return true if user is not null
 };
 
-customerSchema.statics.getEmails = async function (userIds) {
-    const users = await this.find({ _id: { $in: userIds } });
-    return users.map((user) => user.email);
+astrologerSchema.statics.getEmails = async function (userIds) {
+    const astrologers = await this.find({ _id: { $in: userIds } });
+    return astrologers.map((user) => user.email);
 };
 
-customerSchema.pre("save", async function (next) {
+astrologerSchema.pre("save", async function (next) {
     if (
         this.isModified("name") &&
         this.profile_image?.includes("ui-avatars.com") || this.profile_image?.includes("ui-avatars.com")
     ) {
         this.profile_image = `https://ui-avatars.com/api/?background=random&size=128&rounded=true&format=png&name=${this.name}`;
     }
-
-
+    
+    
     if (!this.isModified("password")) {
         next();
     }
@@ -128,5 +125,5 @@ customerSchema.pre("save", async function (next) {
 });
 
 
-
+const Astrologers = mongoose.model('Astrologers', astrologerSchema);
 module.exports = Astrologers;
