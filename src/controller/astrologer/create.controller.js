@@ -37,8 +37,27 @@ const GetAstrologers = asyncHandler(async (req, res) => {
     res.status(200).send({ success: true, user: await Astrologer.find({}) })
 })
 
+
+/**
+ * This function is used to login astrologer 
+ * @param {Object} req Request object
+ * @param {Object} res Response object
+ * @returns {Object} Returns created user object
+ */
+
+const LoginAstrologer = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await CreateAstrologerServices.loginWithEmailAndPass(email, password);
+    const jwt = user.jwt;
+
+    return res.status(200).json({ success: true, user, jwt });
+});
+
+
 module.exports = {
     CreateAstrologer,
     GetAstrologers,
-    UpdateAstrologer
+    UpdateAstrologer,
+    LoginAstrologer
 };

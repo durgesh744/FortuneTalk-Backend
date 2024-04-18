@@ -1,22 +1,28 @@
 const mongoose = require('mongoose');
 const { toJSON } = require("../../plugin/model.plugin.index");
-const bcrypt = require("bcrypt");
 
 const astrologerSchema = new mongoose.Schema({
+    // email: String,
+    // mobileNumber: String,
+    // gender: String,
+    // password: String,
+    // dateOfBirth: Date,
+    // completeAddress: String,
+    astrologerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
     displayName: String,
     realName: String,
-    email: String,
     countryPhoneCode: String,
-    mobileNumber: String,
+
+
     alternateNumber: String,
     currency: String,
-    gender: String,
-    password: String,
-    dateOfBirth: Date,
+
     skill: String,
     language: String,
     experience: String,
-    completeAddress: String,
     country: String,
     state: String,
     city: String,
@@ -26,7 +32,9 @@ const astrologerSchema = new mongoose.Schema({
     mainExpertise: String,
     followersValue: Number,
     educationalQualification: String,
+
     profilePic: String,
+
     idProof: String,
     bankProof: String,
     bankAccountNumber: String,
@@ -87,43 +95,6 @@ const astrologerSchema = new mongoose.Schema({
 
 astrologerSchema.plugin(toJSON);
 
-astrologerSchema.methods.isPasswordMatch = async function (password) {
-    return await bcrypt.compare(password, this.password);
-};
-
-astrologerSchema.statics.isEmailTaken = async function (email, excludeUserId) {
-    const astrologer = await this.findOne({ email, _id: { $ne: excludeUserId } });
-    return !!astrologer; // return true if user is not null
-};
-
-astrologerSchema.statics.isMobileNumberTaken = async function (
-    mobileNumber,
-    excludeUserId
-) {
-    const astrologer = await this.findOne({ mobileNumber, _id: { $ne: excludeUserId } });
-    return !!astrologer; // return true if user is not null
-};
-
-astrologerSchema.statics.getEmails = async function (userIds) {
-    const astrologers = await this.find({ _id: { $in: userIds } });
-    return astrologers.map((user) => user.email);
-};
-
-astrologerSchema.pre("save", async function (next) {
-    if (
-        this.isModified("name") &&
-        this.profile_image?.includes("ui-avatars.com") || this.profile_image?.includes("ui-avatars.com")
-    ) {
-        this.profile_image = `https://ui-avatars.com/api/?background=random&size=128&rounded=true&format=png&name=${this.name}`;
-    }
-    
-    
-    if (!this.isModified("password")) {
-        next();
-    }
-    this.password = await bcrypt.hash(this.password, 10);
-});
-
-
 const Astrologers = mongoose.model('Astrologers', astrologerSchema);
+
 module.exports = Astrologers;

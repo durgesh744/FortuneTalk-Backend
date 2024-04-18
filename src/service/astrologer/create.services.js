@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../../utils/ErrorResponse");
-const { Astrologer } = require("../../models");
+const { Astrologer, Auth } = require("../../models");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 /**
@@ -57,7 +57,52 @@ const updateAustrologerById = async (id, updateBody) => {
 };
 
 
+/**
+ * This function logs in a user with email and password
+ * @param {String} email email of the user
+ * @param {String} password password of the user
+ * @returns {Promise<Object>} {success: true, msg: user, jwt: {token, expiry}
+ */
+
+const loginWithEmailAndPass = async (email, password) => {
+    if (!JWT_SECRET) throw new ErrorResponse("JWT_SECRET not set", 500);
+    const user = await Auth.findOne({ email });
+    if (!user) {
+        throw new ErrorResponse("Email not found", 400);
+    }
+    if (!(await user.isPasswordMatch(password)))
+        throw new ErrorResponse("Password is incorrect", 400);
+
+    if (user.type != "astrologer")
+        throw new ErrorResponse("Type is Invalid", 400);
+
+    const token = jwt.sign(
+        {
+            name: user.name,
+            email: user.email,
+            user_id: user._id,
+        },
+        JWT_SECRET,
+        {
+            expiresIn: 60 * 60 * 24 * 7, // 60*60*24*7 is 7 days, here 60 means 60 seconds
+        }
+    );
+
+    let date = new Date();
+    date.setDate(date.getDate() + 6);
+    delete user.password;
+    return {
+        success: true,
+        data: user,
+        jwt: { token, expiry: date.toISOString() },
+    };
+};
+
+
+
 module.exports = {
     createAccount,
-    updateAustrologerById
+    updateAustrologerById,
+    loginWithEmailAndPass,
+    loginWithEmailAndPass
 };

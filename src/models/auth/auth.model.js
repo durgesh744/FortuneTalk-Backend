@@ -53,6 +53,12 @@ const userSchema = new mongoose.Schema(
             type: String,
             require: false
         },
+        type: {
+            type: String,
+            require: true,
+            default: "user",
+            enum: ["astrologer", "user"],
+        },
         occupation: {
             type: String,
             require: false
@@ -76,6 +82,7 @@ const userSchema = new mongoose.Schema(
             },
         },
     },
+
     { timestamps: true }
 );
 
