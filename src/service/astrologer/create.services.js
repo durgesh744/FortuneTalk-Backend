@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../../utils/ErrorResponse");
 const { Astrologer, Auth } = require("../../models");
 const JWT_SECRET = process.env.JWT_SECRET;
+const bcrypt = require("bcrypt");
 
 /**
  * create account as new user
@@ -12,16 +13,17 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const createAccount = async (userBody) => {
     const data = { ...userBody };
 
-    if (await Astrologer.isEmailTaken(data.email))
+    if (await Auth.isEmailTaken(data.email))
         throw new ErrorResponse("Email already taken", 400);
 
-    if (await Astrologer.isMobileNumberTaken(data.mobileNumber))
+    if (await Auth.isPhoneTaken(data.mobileNumber))
         throw new ErrorResponse("Mobile Number already taken", 400);
 
-    const user = await Astrologer.create(data);
+
+    const user = await Auth.create({ ...data, type: "astrologer" });
+    const otherDetails = await Astrologer.create({ ...data, astrologerId: user._id });
     const token = jwt.sign(
         {
-            fb_id: user.fb_id,
             email: user.email,
             phone: user.phone,
             userId: user._id,
@@ -33,7 +35,7 @@ const createAccount = async (userBody) => {
     );
     let date = new Date();
     date.setDate(date.getDate() + 6);
-    return { user, jwt: { token, expiry: date.toISOString() } };
+    return { user, otherDetails, jwt: { token, expiry: date.toISOString() } };
 };
 
 /**
@@ -66,15 +68,17 @@ const updateAustrologerById = async (id, updateBody) => {
 
 const loginWithEmailAndPass = async (email, password) => {
     if (!JWT_SECRET) throw new ErrorResponse("JWT_SECRET not set", 500);
+
     const user = await Auth.findOne({ email });
     if (!user) {
         throw new ErrorResponse("Email not found", 400);
     }
-    if (!(await user.isPasswordMatch(password)))
-        throw new ErrorResponse("Password is incorrect", 400);
 
     if (user.type != "astrologer")
         throw new ErrorResponse("Type is Invalid", 400);
+    
+    if (!user.isPasswordMatch(user.password))
+        throw new ErrorResponse("Password is Invalid", 400);
 
     const token = jwt.sign(
         {

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { toJSON } = require("../../plugin/model.plugin.index");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
     {
@@ -34,7 +35,7 @@ const userSchema = new mongoose.Schema(
             require: [true, "Please provide phone Number"],
             trim: false,
         },
-        dob: {
+        dateOfBirth: {
             type: Date,
         },
         birth_time: {
@@ -67,6 +68,10 @@ const userSchema = new mongoose.Schema(
             type: String,
             require: false
         },
+        password: {
+            type: String,
+            require: false
+        },
         fb_id: {
             type: String,
             require: false
@@ -94,13 +99,17 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
     return !!user; // return true if user is not null
 };
 
-userSchema.statics.isphoneTaken = async function (
+userSchema.statics.isPhoneTaken = async function (
     phone,
     excludeUserId
 ) {
     const user = await this.findOne({ phone, _id: { $ne: excludeUserId } });
     return !!user; // return true if user is not null
 };
+
+userSchema.methods.isPasswordMatch = async function (password) {
+    return await bcrypt.compare(password, this.password);
+}
 
 userSchema.statics.getEmails = async function (userIds) {
     const users = await this.find({ _id: { $in: userIds } });
@@ -114,6 +123,11 @@ userSchema.pre("save", async function (next) {
     ) {
         this.profile_image = `https://ui-avatars.com/api/?background=random&size=128&rounded=true&format=png&name=${this.name}`;
     }
+
+    if (!this.isModified("password")) {
+        next();
+    }
+    this.password = await bcrypt.hash(this.password, 10);
 });
 
 const Auth = mongoose.model("Auth", userSchema);

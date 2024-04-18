@@ -7,6 +7,10 @@ router
     .route('/')
     .post(AstrologerControllor.CreateAstrologer)
     .get(AstrologerControllor.GetAstrologers)
+    
+router
+    .route('/login')
+    .post(AstrologerControllor.LoginAstrologer)
 
 // update astologer
 router
