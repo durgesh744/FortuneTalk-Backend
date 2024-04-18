@@ -68,7 +68,6 @@ const updateAustrologerById = async (id, updateBody) => {
 
 const loginWithEmailAndPass = async (email, password) => {
     if (!JWT_SECRET) throw new ErrorResponse("JWT_SECRET not set", 500);
-
     const user = await Auth.findOne({ email });
     if (!user) {
         throw new ErrorResponse("Email not found", 400);
@@ -76,8 +75,8 @@ const loginWithEmailAndPass = async (email, password) => {
 
     if (user.type != "astrologer")
         throw new ErrorResponse("Type is Invalid", 400);
-    
-    if (!user.isPasswordMatch(user.password))
+
+    if (!user.isPasswordMatch(password))
         throw new ErrorResponse("Password is Invalid", 400);
 
     const token = jwt.sign(

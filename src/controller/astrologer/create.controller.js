@@ -46,7 +46,7 @@ const GetAstrologers = asyncHandler(async (req, res) => {
 
 const LoginAstrologer = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-
+   console.log(req.body)
     const user = await CreateAstrologerServices.loginWithEmailAndPass(email, password);
     const jwt = user.jwt;
 
