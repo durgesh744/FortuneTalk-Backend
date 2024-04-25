@@ -1,4 +1,4 @@
 // user
-module.exports.Auth = require('./auth/auth.model');
+module.exports.User = require('./user/user.model');
 // astrologer
 module.exports.Astrologer = require('./astrologer/astrologer.model')

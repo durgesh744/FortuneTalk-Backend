@@ -2,15 +2,15 @@ const express = require('express');
 const router = express.Router();
 
 //routes`
-const Auth = require("./auth.route")
+const User = require("./user.route")
 const Astrologer = require("./astrologer/astrologer.route");
 
 const defaultRoutes = [
 
   // -------------------- with out token user ---------------
   {
-    path: "/auth",
-    route: Auth
+    path: "/user",
+    route: User
   },
   {
     path: "/astrologer",

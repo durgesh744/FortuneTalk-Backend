@@ -1,7 +1,7 @@
+const generateToken = require("../helpers/generateToken");
 const asyncHandler = require("../middleware/asyncHandler");
-const { Auth } = require("../models");
-const { AuthService } = require("../service");
-const ApiError = require("../utils/ApiError");
+const { User } = require("../models");
+const { UserService } = require("../service");
 
 /**
  * This function is used to createAccount a user
@@ -11,9 +11,9 @@ const ApiError = require("../utils/ApiError");
  */
 
 const LoginWithGoogle = asyncHandler(async (req, res) => {
-    let user = await Auth.findOne({ email: req.body.email })
+    let user = await User.findOne({ email: req.body.email })
     if (!user) {
-        const newUser = await AuthService.createAccount(req.body);
+        const newUser = await UserService.createAccount(req.body);
         user = newUser.user
     }
     res.status(201).json({ success: true, data: user });
@@ -27,9 +27,9 @@ const LoginWithGoogle = asyncHandler(async (req, res) => {
  */
 
 const LoginWithFacebook = asyncHandler(async (req, res) => {
-    let user = await Auth.findOne({ fb_id: req.body.fb_id })
+    let user = await User.findOne({ fb_id: req.body.fb_id })
     if (user) {
-        const newUser = await AuthService.createAccount({ fb_id: req.body.fb_id, fname: req.body.username });
+        const newUser = await UserService.createAccount({ fb_id: req.body.fb_id, fname: req.body.username });
         user = newUser.user
     }
     res.status(201).json({ success: true, data: user });
@@ -43,13 +43,14 @@ const LoginWithFacebook = asyncHandler(async (req, res) => {
  */
 
 const send_OTP = asyncHandler(async (req, res) => {
-    let user = await Auth.findOne({ phone: req.query.number })
+    let user = await User.findOne({ phone: req.query.number })
     if (!user) {
-        const newUser = await AuthService.createAccount({ phone: req.query.number });
+        const newUser = await UserService.createAccount({ phone: req.query.number });
         user = newUser.user
     }
-    const otp = await AuthService.send_SMS(req.query.number)
-    res.status(200).send({ success: true, otp, user });
+    const otp = await UserService.send_SMS(req.query.number)
+    const token = generateToken(user)
+    res.status(200).send({ success: true, otp, user, token });
 })
 
 /**
@@ -60,7 +61,7 @@ const send_OTP = asyncHandler(async (req, res) => {
  */
 
 const getUser = asyncHandler(async (req, res) => {
-    res.status(200).send({ success: true, user: await Auth.findOne({ _id: req.query.id }) })
+    res.status(200).send({ success: true, user: await User.findOne({ _id: req.query.id }) })
 })
 
 /**
@@ -71,7 +72,7 @@ const getUser = asyncHandler(async (req, res) => {
  */
 
 const UpdateUser = asyncHandler(async (req, res) => {
-    const updateUser = await AuthService.updateAuthById(req.params.id, req.body);
+    const updateUser = await UserService.updateUserById(req.params.id, req.body);
     res.status(200).json({ success: true, data: updateUser });
 });
 
