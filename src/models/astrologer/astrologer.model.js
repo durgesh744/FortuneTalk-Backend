@@ -10,7 +10,7 @@ const astrologerSchema = new mongoose.Schema({
     // completeAddress: String,
     astrologerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Auth"
+        ref: "User"
     },
     displayName: String,
     realName: String,

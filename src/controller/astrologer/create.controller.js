@@ -34,7 +34,7 @@ const UpdateAstrologer = asyncHandler(async (req, res) => {
  */
 
 const GetAstrologers = asyncHandler(async (req, res) => {
-    res.status(200).send({ success: true, user: await Astrologer.find({}).populate('astrologerId') })
+    res.status(200).send({ success: true, data: await Astrologer.find({}).populate('astrologerId') })
 })
 
 /**
@@ -46,17 +46,16 @@ const GetAstrologers = asyncHandler(async (req, res) => {
 
 const LoginAstrologer = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-   console.log(req.body)
+    console.log(req.body)
     const user = await CreateAstrologerServices.loginWithEmailAndPass(email, password);
     const jwt = user.jwt;
 
-    return res.status(200).json({ success: true, user, jwt , msg:"Login Successfully" });
+    return res.status(200).json({ success: true, user, jwt, msg: "Login Successfully" });
 });
-
 
 module.exports = {
     CreateAstrologer,
     GetAstrologers,
     UpdateAstrologer,
-    LoginAstrologer
+    LoginAstrologer,
 };

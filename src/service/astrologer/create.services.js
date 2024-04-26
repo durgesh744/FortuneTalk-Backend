@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../../utils/ErrorResponse");
-const { Astrologer, Auth } = require("../../models");
+const { Astrologer, Auth, User } = require("../../models");
 const JWT_SECRET = process.env.JWT_SECRET;
 const bcrypt = require("bcrypt");
 
@@ -13,14 +13,14 @@ const bcrypt = require("bcrypt");
 const createAccount = async (userBody) => {
     const data = { ...userBody };
 
-    if (await Auth.isEmailTaken(data.email))
+    if (await User.isEmailTaken(data.email))
         throw new ErrorResponse("Email already taken", 400);
 
-    if (await Auth.isPhoneTaken(data.mobileNumber))
+    if (await User.isPhoneTaken(data.mobileNumber))
         throw new ErrorResponse("Mobile Number already taken", 400);
 
 
-    const user = await Auth.create({ ...data, type: "astrologer" });
+    const user = await User.create({ ...data, type: "astrologer" });
     const otherDetails = await Astrologer.create({ ...data, astrologerId: user._id });
     const token = jwt.sign(
         {
