@@ -6,7 +6,6 @@ if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
 
-
 const cluster = require("cluster");
 const totalCPUs = process.env.TOTAL_CPU || require("os").cpus().length;
 
@@ -34,7 +33,7 @@ if (cluster.isMaster) {
 
 } else {
     const server = require("./server");
-
+    
     // Access the server instance
     server.on("listening", () => {
         console.log(`Cluster ==========> Server ${process.pid} is running`);
