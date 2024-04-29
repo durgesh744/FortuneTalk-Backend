@@ -68,7 +68,7 @@ const updateAustrologerById = async (id, updateBody) => {
 
 const loginWithEmailAndPass = async (email, password) => {
     if (!JWT_SECRET) throw new ErrorResponse("JWT_SECRET not set", 500);
-    const user = await Auth.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
         throw new ErrorResponse("Email not found", 400);
     }
@@ -83,7 +83,7 @@ const loginWithEmailAndPass = async (email, password) => {
         {
             name: user.name,
             email: user.email,
-            user_id: user._id,
+            userId: user._id,
         },
         JWT_SECRET,
         {
