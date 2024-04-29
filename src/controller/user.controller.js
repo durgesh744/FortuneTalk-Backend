@@ -49,8 +49,8 @@ const send_OTP = asyncHandler(async (req, res) => {
         user = newUser.user
     }
     const otp = await UserService.send_SMS(req.query.number)
-    const token = generateToken(user)
-    res.status(200).send({ success: true, otp, user, token });
+    const jwt = generateToken(user)
+    res.status(200).send({ success: true, otp, user, jwt });
 })
 
 /**
