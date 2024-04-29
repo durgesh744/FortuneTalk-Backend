@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../../utils/ErrorResponse");
 const { Astrologer, Auth, User } = require("../../models");
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -22,9 +21,9 @@ const createAccount = async (userBody) => {
 
     const user = await User.create({ ...data, type: "astrologer" });
     const otherDetails = await Astrologer.create({ ...data, astrologerId: user._id });
-    const token = generateToken(user)
+    const jwt = generateToken(user)
 
-    return { user, otherDetails, token };
+    return { user, otherDetails, jwt };
 };
 
 /**
@@ -68,15 +67,13 @@ const loginWithEmailAndPass = async (email, password) => {
     if (!user.isPasswordMatch(password))
         throw new ErrorResponse("Password is Invalid", 400);
 
-    const token = generateToken(user)
+    const jwt = generateToken(user)
     delete user.password;
     return {
         user,
-        token,
+        jwt,
     };
 };
-
-
 
 module.exports = {
     createAccount,

@@ -17,7 +17,7 @@ const generateToken = (user) => {
     let date = new Date();
     date.setDate(date.getDate() + 6);
 
-    return { jwt: { token, expiry: date.toISOString() } }
+    return { token, expiry: date.toISOString() }
 }
 
 module.exports = generateToken

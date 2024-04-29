@@ -12,8 +12,8 @@ const generateToken = require("../helpers/generateToken");
 const createAccount = async (userBody) => {
     const data = { ...userBody };
     const user = await User.create(data);
-    const token = generateToken(user)
-    return { user, token }
+    const jwt = generateToken(user)
+    return { user, jwt }
 };
 
 /**
