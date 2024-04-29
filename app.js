@@ -9,7 +9,7 @@ const sentry = require("./src/config/sentry");
 sentry.SentrySetup(app);
 
 
-// <--------------------------------------------- body parser setup  -------------------------------------------------->
+// <--------------------------------------------- body parser setup test  -------------------------------------------------->
 
 // remove body size limit
 const bodyParser = require('body-parser');
