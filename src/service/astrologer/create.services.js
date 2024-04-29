@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../../utils/ErrorResponse");
 const { Astrologer, Auth, User } = require("../../models");
 const JWT_SECRET = process.env.JWT_SECRET;
+const generateToken = require("../../helpers/generateToken");
 
 /**
  * create account as new user
@@ -22,6 +23,7 @@ const createAccount = async (userBody) => {
     const user = await User.create({ ...data, type: "astrologer" });
     const otherDetails = await Astrologer.create({ ...data, astrologerId: user._id });
     const token = generateToken(user)
+
     return { user, otherDetails, token };
 };
 

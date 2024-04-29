@@ -1,7 +1,7 @@
 const { User } = require("../models");
 const { default: axios } = require("axios");
 const otpGenerator = require("otp-generator");
-const { default: generateToken } = require("../helpers/generateToken");
+const generateToken = require("../helpers/generateToken");
 
 /**
  * create account as new user
