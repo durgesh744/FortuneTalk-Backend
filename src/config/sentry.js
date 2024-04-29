@@ -17,7 +17,7 @@ const SentrySetup = (app) => {
 
         app.use(
             Sentry.Handlers.requestHandler({
-                user: ["user_id", "email", "name"],
+                user: ["userId", "email", "name"],
             })
         );
         app.use(Sentry.Handlers.tracingHandler());

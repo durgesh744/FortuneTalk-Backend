@@ -5,9 +5,9 @@ const router = express.Router();
 const User = require("./user.route")
 const Astrologer = require("./astrologer/astrologer.route");
 
+// -------------------- with out token access routes ---------------
 const defaultRoutes = [
 
-  // -------------------- with out token user ---------------
   {
     path: "/user",
     route: User
@@ -18,22 +18,23 @@ const defaultRoutes = [
   },
 ]
 
-// const authRoutes = [
-//   {
-//     path: "/chat",
-//     route: Chat
-//   },
-// ];
-
 defaultRoutes.forEach((route) => {
   router.use(route.path, route.route);
 });
 
-// Auth routes
-// router.use(require("../../middleware/Api-auth.middleware").auth())
+// --------------------access routes with token ---------------
+const authRoutes = [
+  // {
+  //   path: "/path",
+  //   route: Route Name
+  // },
+];
 
-// authRoutes.forEach((route) => {
-//   router.use(route.path, route.route);
-// });
+// Auth routes
+router.use(require("../../middleware/Api-auth.middleware").auth())
+
+authRoutes.forEach((route) => {
+  router.use(route.path, route.route);
+});
 
 module.exports = router;

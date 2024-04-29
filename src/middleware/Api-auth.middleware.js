@@ -30,10 +30,9 @@ const verifyCallback = (req, res, next) => async (err, response) => {
 
 /**
  * This function works as a middleware to protect routes and verifying access
- * @param {String} permission permission required to access the route
  * @returns {Function} Express middleware function
  */
-const auth = (permission) => (req, res, next) => {
+const auth = () => (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 

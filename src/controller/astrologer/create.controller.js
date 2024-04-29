@@ -47,7 +47,7 @@ const GetAstrologers = asyncHandler(async (req, res) => {
 const LoginAstrologer = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const user = await CreateAstrologerServices.loginWithEmailAndPass(email, password);
-    return res.status(200).json({ success: true, user, msg: "Login Successfully" });
+    return res.status(200).json({ user, msg: "Login Successfully", success: true });
 });
 
 module.exports = {

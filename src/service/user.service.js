@@ -1,10 +1,7 @@
-const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 const { default: axios } = require("axios");
 const otpGenerator = require("otp-generator");
 const { default: generateToken } = require("../helpers/generateToken");
-
-const JWT_SECRET = process.env.JWT_SECRET;
 
 /**
  * create account as new user
@@ -58,7 +55,6 @@ const updateUserById = async (id, updateBody) => {
 
 
 module.exports = {
-    // generateToken,
     createAccount,
     updateUserById,
     send_SMS

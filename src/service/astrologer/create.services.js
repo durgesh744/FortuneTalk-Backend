@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../../utils/ErrorResponse");
 const { Astrologer, Auth, User } = require("../../models");
 const JWT_SECRET = process.env.JWT_SECRET;
-const bcrypt = require("bcrypt");
 
 /**
  * create account as new user
@@ -22,20 +21,8 @@ const createAccount = async (userBody) => {
 
     const user = await User.create({ ...data, type: "astrologer" });
     const otherDetails = await Astrologer.create({ ...data, astrologerId: user._id });
-    const token = jwt.sign(
-        {
-            email: user.email,
-            phone: user.phone,
-            userId: user._id,
-        },
-        JWT_SECRET,
-        {
-            expiresIn: 60 * 60 * 24 * 7, // 60*60*24*7 is 7 days, here 60 means 60 seconds
-        }
-    );
-    let date = new Date();
-    date.setDate(date.getDate() + 6);
-    return { user, otherDetails, jwt: { token, expiry: date.toISOString() } };
+    const token = generateToken(user)
+    return { user, otherDetails, token };
 };
 
 /**
@@ -79,25 +66,11 @@ const loginWithEmailAndPass = async (email, password) => {
     if (!user.isPasswordMatch(password))
         throw new ErrorResponse("Password is Invalid", 400);
 
-    const token = jwt.sign(
-        {
-            name: user.name,
-            email: user.email,
-            userId: user._id,
-        },
-        JWT_SECRET,
-        {
-            expiresIn: 60 * 60 * 24 * 7, // 60*60*24*7 is 7 days, here 60 means 60 seconds
-        }
-    );
-
-    let date = new Date();
-    date.setDate(date.getDate() + 6);
+    const token = generateToken(user)
     delete user.password;
     return {
-        success: true,
-        data: user,
-        jwt: { token, expiry: date.toISOString() },
+        user,
+        token,
     };
 };
 
