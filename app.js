@@ -1,5 +1,6 @@
 const express = require("express");
 const cluster = require('cluster');
+const cors = require("cors");
 
 // <------------------------------------------------ initialize app --------------------------------------------------->
 const app = express();
@@ -18,8 +19,10 @@ app.use(bodyParser.urlencoded({ limit: '2gb', extended: true }));
 
 
 // <------------------------------------------------ CORS config ------------------------------------------------------>
-const cors = require("cors");
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+}));
 
 // <---------------------------------------------- Logging Middleware ------------------------------------------------->
 

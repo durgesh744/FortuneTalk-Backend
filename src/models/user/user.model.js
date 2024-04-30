@@ -76,6 +76,10 @@ const userSchema = new mongoose.Schema(
             type: String,
             require: false
         },
+        otp: {
+            type: Number,
+            require: false
+        },
         resetToken: {
             token: {
                 type: String,
