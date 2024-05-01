@@ -1,5 +1,6 @@
 const express = require("express");
 const cluster = require('cluster');
+const cors = require("cors");
 
 // <------------------------------------------------ initialize app --------------------------------------------------->
 const app = express();
@@ -9,7 +10,7 @@ const sentry = require("./src/config/sentry");
 sentry.SentrySetup(app);
 
 
-// <--------------------------------------------- body parser setup test  -------------------------------------------------->
+// <--------------------------------------------- body parser setup test  rr -------------------------------------------------->
 
 // remove body size limit
 const bodyParser = require('body-parser');
@@ -18,8 +19,10 @@ app.use(bodyParser.urlencoded({ limit: '2gb', extended: true }));
 
 
 // <------------------------------------------------ CORS config ------------------------------------------------------>
-const cors = require("cors");
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+}));
 
 // <---------------------------------------------- Logging Middleware ------------------------------------------------->
 
