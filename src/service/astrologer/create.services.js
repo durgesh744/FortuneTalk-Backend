@@ -55,7 +55,9 @@ const updateAustrologerById = async (id, updateBody) => {
  */
 
 const loginWithEmailAndPass = async (email, password) => {
+    console.log(password)
     if (!JWT_SECRET) throw new ErrorResponse("JWT_SECRET not set", 500);
+    
     const user = await User.findOne({ email });
     if (!user) {
         throw new ErrorResponse("Email not found", 400);

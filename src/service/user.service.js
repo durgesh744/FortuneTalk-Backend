@@ -2,6 +2,7 @@ const { User } = require("../models");
 const { default: axios } = require("axios");
 const otpGenerator = require("otp-generator");
 const generateToken = require("../helpers/generateToken");
+const ErrorResponse = require("../utils/ErrorResponse");
 
 /**
  * create account as new user
@@ -11,6 +12,7 @@ const generateToken = require("../helpers/generateToken");
 
 const createAccount = async (userBody) => {
     const data = { ...userBody };
+
     const user = await User.create(data);
     const jwt = generateToken(user)
     return { user, jwt }
@@ -23,9 +25,14 @@ const createAccount = async (userBody) => {
  */
 
 const send_SMS = async (phone) => {
+
+    if (!await User.isPhoneTaken(phone))
+        throw new ErrorResponse("Mobile Number already taken", 400);
+
     const OTP = await otpGenerator.generate(4, {
         lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false
     })
+
     const url = `https://trans.smsfresh.co/api/sendmsg.php?user=AstrovedhaS&pass=123456&sender=ASTOVD&phone=${phone}&text=${OTP}%20is%20the%20one%20time%20password%20for%20FortuneTalk%20App%20-%20Astrovedha%20Shastra%20Pvt%20Ltd&priority=ndnd&stype=normal`;
     await axios.get(url).catch((err) => {
         console.log(err)
