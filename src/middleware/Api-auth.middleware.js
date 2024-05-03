@@ -35,7 +35,8 @@ const verifyCallback = (req, res, next) => async (err, response) => {
 const auth = () => (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-
+   console.log(authHeader, "lkdkjskjd")
+   
     if (token == null) {
         throw new ErrorResponse(
             `unauthorized, please provide a valid jwt token`,

@@ -7,7 +7,7 @@ router
     .route('/')
     .post(AstrologerControllor.CreateAstrologer)
     .get(AstrologerControllor.GetAstrologers)
-    
+
 router
     .route('/login')
     .post(AstrologerControllor.LoginAstrologer)
@@ -16,6 +16,11 @@ router
 router
     .route('/:id')
     .put(AstrologerControllor.UpdateAstrologer)
+
+    // get astrologer profile
+router
+    .route('/profile/:id')
+    .get(AstrologerControllor.getProfile)
 
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { Astrologer } = require("../../models");
+const { Astrologer, User } = require("../../models");
 const { CreateAstrologerServices } = require("../../service");
 const asyncHandler = require("../../middleware/asyncHandler");
 
@@ -46,8 +46,13 @@ const GetAstrologers = asyncHandler(async (req, res) => {
 
 const LoginAstrologer = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-     const user =  await CreateAstrologerServices.loginWithEmailAndPass(email, password);
+    const user = await CreateAstrologerServices.loginWithEmailAndPass(email, password);
     return res.status(200).json({ data: user, msg: "Login Successfully", success: true });
+});
+
+const getProfile = asyncHandler(async (req, res) => {
+    const profile = await Astrologer.findOne({ astrologerId: req.params.id }).populate('astrologerId')
+    return res.status(200).json({ data: profile, success: true });
 });
 
 module.exports = {
@@ -55,4 +60,5 @@ module.exports = {
     GetAstrologers,
     UpdateAstrologer,
     LoginAstrologer,
+    getProfile
 };

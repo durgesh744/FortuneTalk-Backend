@@ -60,7 +60,6 @@ const updateUserById = async (id, updateBody) => {
     return updatedUser;
 };
 
-
 module.exports = {
     createAccount,
     updateUserById,

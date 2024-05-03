@@ -67,7 +67,6 @@ const send_OTP = asyncHandler(async (req, res) => {
     res.status(200).send({ success: true, otp, user, jwt, isNewUser });
 });
 
-
 /**
  * This function is used to verify OTP and create an account if the user doesn't exist.
  * @param {Object} req Request object
